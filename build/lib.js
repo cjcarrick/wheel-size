@@ -92,9 +92,9 @@ function msg(str, level = 'info', title) {
     const titleLines = hardWrap(title, width).split('\n')
     log(
       line1 +
-        ' ' +
-        chalk.bold(titleLines[0]) +
-        time.padStart(cols - 7 - titleLines[0].length)
+      ' ' +
+      chalk.bold(titleLines[0]) +
+      time.padStart(cols - 7 - titleLines[0].length)
     )
     titleLines.splice(0, 1)
     titleLines.forEach(l => log(pad(7) + chalk.bold(l)))
@@ -110,6 +110,7 @@ function msg(str, level = 'info', title) {
 
 function printDetail(a) {
   if (!a) return
+  console.log(a.location)
 
   // Adjust the line to highlight part if it (if necessary) and add elipses (if
   // necessary)
@@ -199,8 +200,7 @@ function handleBuildDone(buildStatus, isRebuild = false) {
     msg(
       '',
       'ok',
-      `${isRebuild ? 'Rebuilt' : 'Built'} src/index.ts with ${
-        buildStatus?.warnings?.length || 0
+      `${isRebuild ? 'Rebuilt' : 'Built'} src/index.ts with ${buildStatus?.warnings?.length || 0
       } warning(s)`
     )
 
@@ -223,7 +223,7 @@ function handleBuildDone(buildStatus, isRebuild = false) {
       '',
       'error',
       (isRebuild ? 'Rebuild' : 'Build') +
-        ` of src/index.ts failed with ${buildStatus.errors.length} error(s) and ${buildStatus.warnings.length} warning(s)`
+      ` of src/index.ts failed with ${buildStatus.errors.length} error(s) and ${buildStatus.warnings.length} warning(s)`
     )
   } else {
     success()

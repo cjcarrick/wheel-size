@@ -5,6 +5,7 @@ specifiers:
   '@typescript-eslint/parser': ^5.50.0
   chalk: ^5.2.0
   esbuild: ^0.17.5
+  esbuild-plugin-copy: ^2.0.2
   esbuild-sass-plugin: ^2.4.5
   eslint: ^8.33.0
   live-server: ^1.2.2
@@ -18,6 +19,7 @@ devDependencies:
   '@typescript-eslint/parser': 5.50.0_4vsywjlpuriuw3tl5oq6zy5a64
   chalk: 5.2.0
   esbuild: 0.17.5
+  esbuild-plugin-copy: 2.0.2_esbuild@0.17.5
   esbuild-sass-plugin: 2.4.5
   eslint: 8.33.0
   live-server: 1.2.2
@@ -1075,6 +1077,17 @@ packages:
     dev: true
     optional: true
 
+  /esbuild-plugin-copy/2.0.2_esbuild@0.17.5:
+    resolution: {integrity: sha512-HlDgkHXagBCwaoB8tlQFeH08/i5a2ey6Pc26annV1YcG5CkAHzzRzmCwp3wdi5KHI//HVUgipS+Zsy2tQmn9gQ==}
+    peerDependencies:
+      esbuild: '>= 0.14.0'
+    dependencies:
+      chalk: 4.1.2
+      esbuild: 0.17.5
+      fs-extra: 10.1.0
+      globby: 11.1.0
+    dev: true
+
   /esbuild-sass-plugin/2.4.5:
     resolution: {integrity: sha512-di2hLaIwhRXe513uaPPxv+5bjynxAgrS8R+u38lbBfvp1g1xOki4ACXV2aXip2CRPGTbAVDySSxujd9iArFV0w==}
     dependencies:
@@ -1494,6 +1507,15 @@ packages:
     resolution: {integrity: sha512-twe20eF1OxVxp/ML/kq2p1uc6KvFK/+vs8WjEbeKmV2He22MKm7YF2ANIt+EOqhJ5L3K/SuuPhk0hWQDjOM23g==}
     dev: true
 
+  /fs-extra/10.1.0:
+    resolution: {integrity: sha512-oRXApq54ETRj4eMiFzGnHWGy+zo5raudjuxN0b8H7s/RU2oW0Wvsx9O0ACRN/kRq9E8Vu/ReskGB5o3ji+FzHQ==}
+    engines: {node: '>=12'}
+    dependencies:
+      graceful-fs: 4.2.10
+      jsonfile: 6.1.0
+      universalify: 2.0.0
+    dev: true
+
   /fs.realpath/1.0.0:
     resolution: {integrity: sha512-OO0pH2lK6a0hZnAdau5ItzHPI6pUlvI7jMVnxUQRtw4owF2wk8lOSabtGDCTP4Ggrg2MbGnWO9X8K1t4+fGMDw==}
     dev: true
@@ -1873,6 +1895,14 @@ packages:
 
   /json-stable-stringify-without-jsonify/1.0.1:
     resolution: {integrity: sha512-Bdboy+l7tA3OGW6FjyFHWkP5LuByj1Tk33Ljyq0axyzdk9//JSi2u3fP1QSmd1KNwq6VOKYGlAu87CisVir6Pw==}
+    dev: true
+
+  /jsonfile/6.1.0:
+    resolution: {integrity: sha512-5dgndWOriYSm5cnYaJNhalLNDKOqFwyDB/rr1E9ZsGciGvKPs8R2xYGCacuf3z6K1YKDz182fd+fY3cn3pMqXQ==}
+    dependencies:
+      universalify: 2.0.0
+    optionalDependencies:
+      graceful-fs: 4.2.10
     dev: true
 
   /kind-of/3.2.2:
@@ -2952,6 +2982,11 @@ packages:
     resolution: {integrity: sha512-k5GzIBZ/QatR8N5X2y+drfpWG8IDBzdnVj6OInRNWm1oXrzydiaAT2OQiA8DPRRZyAKb9b6I2a6PxYklZD0gKg==}
     dependencies:
       '@types/unist': 2.0.6
+    dev: true
+
+  /universalify/2.0.0:
+    resolution: {integrity: sha512-hAZsKq7Yy11Zu1DE0OzWjw7nnLZmJZYTDZZyEFHZdUhV8FkH5MCfoU1XMaxXovpyW5nq5scPqq0ZDP9Zyl04oQ==}
+    engines: {node: '>= 10.0.0'}
     dev: true
 
   /unix-crypt-td-js/1.1.4:

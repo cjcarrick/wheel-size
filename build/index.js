@@ -1,6 +1,7 @@
 import esbuild from 'esbuild'
-import { handleBuildDone } from './lib.js'
+import { copy } from 'esbuild-plugin-copy'
 import { sassPlugin } from 'esbuild-sass-plugin'
+import { handleBuildDone } from './lib.js'
 const DEV = !!process.env.NODE_ENV?.match(/dev/i)
 const WATCH = !!process.argv.includes('-w')
 
@@ -11,9 +12,16 @@ const buildOpts = {
   logLevel: 'silent',
   minify: !DEV,
   format: 'esm',
-  plugins: [sassPlugin({ type: 'style', style: 'compressed' })],
+  plugins: [
+    copy({
+      resolveFrom: 'cwd',
+      assets: { from: ['./src/index.html'], to: ['./dist/index.html'] }
+    }),
+    sassPlugin({ type: 'style', style: 'compressed' })
+  ],
   outdir: 'dist',
-  sourcemap: 'inline'
+  sourcemap: DEV ? 'inline' : false,
+  ...(DEV ? {} : { mangleProps: /_$/ })
 }
 
 if (WATCH) {

@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>brz-wheel-size</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script defer type="module" src="./index.js"></script>
+</head>
+
+<body>
+  <header>
+    <details>
+      <summary>How To Use</summary>
+
+      <ol>
+        <li>
+          Enter your ride height. If your car is not lowered, set it to
+          <code>0.00 in</code>. If you're lowered 1", set it to
+          <code>-1.00 in</code>. As the car is lowered, the wheels will
+          naturally be pushed outwards, so the amount of offset needed for
+          "perfect flushness" changes.
+        </li>
+
+        <li>
+          Adjust the width and offset fields to match whatever the width and
+          offset of your wheels are.
+        </li>
+
+        <li>
+          Ideally, your plot will fall somewhere in between "Perfect Offset
+          for Rear Flushness" and "Perfect Offset for Front Flushness". The
+          front and rears require different offsets, so try and make whatever
+          compromises you have to.
+        </li>
+
+        <li>
+          Lastly, you can adjust the spacer size. Spacers have the ability to
+          push the wheel out just a little bit more. They can also be useful
+          to achieve perfect flushness in the front and the back.
+        </li>
+
+        <li>
+          Each of the sliders will snap to increments that make sense. You can
+          turn that off by unchecking the <code>SNAP</code> button. You can
+          also lock a value by checking the <code>LOCK</code> button.
+        </li>
+
+        <li>
+          You'll also notice dots plotted on the graph. The dots represent
+          setups from other members of the community for you to reference. You
+          can click on one of them to show information in the bottom of the
+          screen.
+        </li>
+      </ol>
+    </details>
+  </header>
+
+  <main>
+    <canvas class="graph"></canvas>
+
+    <div class="opt-group graph">
+      <label>
+        Guide:
+        <select name="guide" class="guides">
+          <option selected>None</option>
+        </select>
+      </label>
+    </div>
+
+    <div class="opt-group">
+      <table>
+        <tr class="height">
+          <td>Ride height:</td>
+          <td><input type="range" min="-3" max="1" step="0.25" value="0" /></td>
+          <td><input type="number" size="5" /></td>
+          <td><label> SNAP <input type="checkbox" class="snap" checked="checked " /></label></td>
+          <td><label> LOCK <input type="checkbox" class="lock" /> </label></td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="opt-group wheel">
+      <div class="controls a">
+        <table>
+          <tbody>
+            <tr class="wheelWidth">
+              <td class="label">Wheel Width:</td>
+              <td>
+                <input type="range" min="6" max="12" step="0.5" value="0" />
+              </td>
+              <td><input type="number" size="5" /></td>
+              <td>
+                <label>
+                  SNAP
+                  <input type="checkbox" class="snap" checked="checked " />
+                </label>
+              </td>
+              <td>
+                <label> LOCK <input type="checkbox" class="lock" /> </label>
+              </td>
+            </tr>
+
+            <tr class="offset">
+              <td class="label">Wheel Offset:</td>
+              <td>
+                <input type="range" min="-80" max="80" step="1" value="0" />
+              </td>
+              <td><input type="number" size="5" /></td>
+              <td>
+                <label>
+                  SNAP
+                  <input type="checkbox" class="snap" checked="checked " />
+                </label>
+              </td>
+              <td>
+                <label> LOCK <input type="checkbox" class="lock" /> </label>
+              </td>
+            </tr>
+
+            <tr class="tireWidth">
+              <td class="label">Tire Width:</td>
+              <td>
+                <input type="range" min="85" max="305" step="5" value="0" />
+              </td>
+              <td><input type="number" size="5" /></td>
+              <td>
+                <label>
+                  SNAP
+                  <input type="checkbox" class="snap" checked="checked " />
+                </label>
+              </td>
+              <td>
+                <label> LOCK <input type="checkbox" class="lock" /> </label>
+              </td>
+            </tr>
+
+            <tr class="aspect">
+              <td class="label">Tire Aspect Ratio:</td>
+              <td>
+                <input type="range" min="5" max="200" step="5" value="16" />
+              </td>
+              <td><input type="number" size="5" /></td>
+              <td>
+                <label>
+                  SNAP
+                  <input type="checkbox" class="snap" checked="checked " />
+                </label>
+              </td>
+              <td>
+                <label> LOCK <input type="checkbox" class="lock" /> </label>
+              </td>
+            </tr>
+
+            <tr class="spacer">
+              <td class="label">Wheel Spacer Size:</td>
+              <td>
+                <input type="range" min="0" max="50" step="1" value="0" />
+              </td>
+              <td><input type="number" size="5" /></td>
+              <td>
+                <label>
+                  SNAP
+                  <input type="checkbox" class="snap" checked="checked " />
+                </label>
+              </td>
+              <td>
+                <label> LOCK <input type="checkbox" class="lock" /> </label>
+              </td>
+            </tr>
+
+            <tr class="diameter">
+              <td class="label">Wheel Diameter:</td>
+              <td>
+                <input type="range" min="16" max="28" step="0.5" value="16" />
+              </td>
+              <td><input type="number" size="5" /></td>
+              <td>
+                <label>
+                  SNAP
+                  <input type="checkbox" class="snap" checked="checked " />
+                </label>
+              </td>
+              <td>
+                <label> LOCK <input type="checkbox" class="lock" /> </label>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <input type="button" value="Reset" class="reset" />
+      </div>
+
+      <div class="controls b">
+        <table>
+          <tbody>
+            <tr class="wheelWidth">
+              <td class="label">Wheel Width:</td>
+              <td>
+                <input type="range" min="6" max="12" step="0.5" value="0" />
+              </td>
+              <td><input type="number" size="5" /></td>
+              <td>
+                <label>
+                  SNAP
+                  <input type="checkbox" class="snap" checked="checked " />
+                </label>
+              </td>
+              <td>
+                <label> LOCK <input type="checkbox" class="lock" /> </label>
+              </td>
+            </tr>
+
+            <tr class="offset">
+              <td class="label">Wheel Offset:</td>
+              <td>
+                <input type="range" min="-80" max="80" step="1" value="0" />
+              </td>
+              <td><input type="number" size="5" /></td>
+              <td>
+                <label>
+                  SNAP
+                  <input type="checkbox" class="snap" checked="checked " />
+                </label>
+              </td>
+              <td>
+                <label> LOCK <input type="checkbox" class="lock" /> </label>
+              </td>
+            </tr>
+
+            <tr class="tireWidth">
+              <td class="label">Tire Width:</td>
+              <td>
+                <input type="range" min="85" max="305" step="5" value="0" />
+              </td>
+              <td><input type="number" size="5" /></td>
+              <td>
+                <label>
+                  SNAP
+                  <input type="checkbox" class="snap" checked="checked " />
+                </label>
+              </td>
+              <td>
+                <label> LOCK <input type="checkbox" class="lock" /> </label>
+              </td>
+            </tr>
+
+            <tr class="aspect">
+              <td>Tire Aspect Ratio:</td>
+              <td>
+                <input name="aspect" type="range" min="5" max="200" step="5" value="16" />
+              </td>
+              <td><input type="number" size="5" /></td>
+              <td>
+                <label>
+                  SNAP
+                  <input type="checkbox" class="snap" checked="checked " />
+                </label>
+              </td>
+              <td>
+                <label> LOCK <input type="checkbox" class="lock" /> </label>
+              </td>
+            </tr>
+
+            <tr class="spacer">
+              <td>Wheel Spacer Size:</td>
+              <td>
+                <input type="range" min="0" max="50" step="1" value="0" />
+              </td>
+              <td><input type="number" size="5" /></td>
+              <td>
+                <label>
+                  SNAP
+                  <input type="checkbox" class="snap" checked="checked " />
+                </label>
+              </td>
+              <td>
+                <label> LOCK <input type="checkbox" class="lock" /> </label>
+              </td>
+            </tr>
+
+            <tr class="diameter">
+              <td class="label">Wheel Diameter:</td>
+              <td>
+                <input type="range" min="16" max="28" step="0.5" value="16" />
+              </td>
+              <td><input type="number" size="5" /></td>
+              <td>
+                <label>
+                  SNAP
+                  <input type="checkbox" class="snap" checked="checked " />
+                </label>
+              </td>
+              <td>
+                <label> LOCK <input type="checkbox" class="lock" /> </label>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <input type="button" value="Reset" class="reset" />
+      </div>
+    </div>
+    </div>
+
+    <div class="visualizers">
+      <canvas class="a"></canvas>
+      <canvas class="ab"></canvas>
+      <canvas class="b"></canvas>
+    </div>
+
+    <table class="examples"></table>
+  </main>
+
+  <footer>
+    <p><a href="https://github.com/cjcarrick/brz-wheel-size">Source</a></p>
+  </footer>
+</body>
+
+</html>

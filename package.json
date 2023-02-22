@@ -2,9 +2,10 @@
   "name": "brz-wheel-size",
   "version": "0.1.0",
   "scripts": {
-    "build": "export NODE_ENV=production && node util/build.js",
-    "watch": "export NODE_ENV=development && node util/build.js -w",
-    "dev": "live-server --no-browser"
+    "build": "export NODE_ENV=production && node build/index.js",
+    "generate": "node build/examples.js",
+    "watch": "export NODE_ENV=development && node build/index.js -w",
+    "start": "live-server --no-browser dist"
   },
   "type": "module",
   "prettier": {
@@ -25,6 +26,7 @@
     "@typescript-eslint/parser": "^5.50.0",
     "chalk": "^5.2.0",
     "esbuild": "^0.17.5",
+    "esbuild-plugin-copy": "^2.0.2",
     "esbuild-sass-plugin": "^2.4.5",
     "eslint": "^8.33.0",
     "live-server": "^1.2.2",
