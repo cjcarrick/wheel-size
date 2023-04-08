@@ -76,7 +76,6 @@ const values = sides.reduce(
         width: new SliderWithValue(`.controls.${side} .tireWidth`),
         aspect: new SliderWithValue(`.controls.${side} .aspect`)
       },
-      spacer: new SliderWithValue(`.controls.${side} .spacer`)
     }
   }),
   {}
@@ -91,7 +90,6 @@ const values = sides.reduce(
         width: SliderWithValue
         aspect: SliderWithValue
       }
-      spacer: SliderWithValue
     }
   }
 
@@ -103,7 +101,6 @@ for (let i = 0; i < sides.length; i++) {
   offsetGraph.addSet({
     width: vals.wheel.width,
     offset: vals.wheel.offset,
-    spacer: vals.spacer,
     color: colors[i]
   })
 
@@ -115,14 +112,12 @@ for (let i = 0; i < sides.length; i++) {
       offset: vals.wheel.offset.val
     },
     tire: { width: vals.tire.width.val, aspect: vals.tire.aspect.val },
-    spacer: vals.spacer.val,
     color: colors[i]
   })
 
-  offsetGraph.onChange((newWidth, newOffset, newSpacer) => {
+  offsetGraph.onChange((newWidth, newOffset, ) => {
     vals.wheel.width.setValue(newWidth)
     vals.wheel.offset.setValue(newOffset)
-    vals.spacer.setValue(newSpacer)
   })
 
   // Draw the canvas
@@ -146,7 +141,6 @@ for (let i = 0; i < sides.length; i++) {
           width: vals.tire.width.val,
           aspect: vals.tire.aspect.val
         },
-        spacer: vals.spacer.val,
         color: colors[i]
       }
     ]
@@ -168,17 +162,15 @@ for (let i = 0; i < sides.length; i++) {
       width: vals.tire.width.val,
       aspect: vals.tire.aspect.val
     }
-    const spacer = vals.spacer.val
 
-    visualizer.updateSet(0, { wheel, tire, spacer })
-    combinedVisualizer.updateSet(i, { wheel, tire, spacer })
+    visualizer.updateSet(0, { wheel, tire,  })
+    combinedVisualizer.updateSet(i, { wheel, tire,  })
   }
 
   // Update graphs and visualizers on change
   vals.wheel.width.onchange(update)
   vals.wheel.offset.onchange(update)
   vals.wheel.diameter.onchange(update)
-  vals.spacer.onchange(update)
   vals.tire.width.onchange(update)
   vals.tire.aspect.onchange(update)
   rideheight.onchange(visualizer.updateRideHeight)
@@ -202,10 +194,6 @@ for (let i = 0; i < sides.length; i++) {
       parseWheelDescriptor(vehicles[vehicle].stock, vehicles[vehicle].stock)
         .rideheight
     )
-    vals.spacer.setValue(
-      parseWheelDescriptor(vehicles[vehicle].stock, vehicles[vehicle].stock)
-        .front.spacer
-    )
     vals.tire.width.setValue(
       parseWheelDescriptor(vehicles[vehicle].stock, vehicles[vehicle].stock)
         .tire.front.width
@@ -226,9 +214,7 @@ async function updateExamples() {
   const container = document.querySelector('.examples') as HTMLDivElement
   container.innerHTML = ''
 
-  console.log(vehicle)
   let exs = await fetchExamples(vehicle, a.wheel.width.val, a.wheel.offset.val)
-  console.log(exs)
 
   const isStaggered = 'front' in exs
   a.wheel.offset.val !== b.wheel.offset.val ||
@@ -236,7 +222,6 @@ async function updateExamples() {
     a.wheel.diameter.val !== b.wheel.diameter.val ||
     a.tire.width.val !== b.tire.width.val ||
     a.tire.aspect.val !== b.tire.aspect.val ||
-    a.spacer.val !== b.spacer.val
 
   if (isStaggered) {
     exs = [
@@ -273,16 +258,12 @@ async function updateExamples() {
         )}`,
         ' ' + example.wheel.front.make + ' ' + example.wheel.front.model,
         '    ',
-        'Spacer: ',
-        example.back.spacer,
-        '    ',
         {
           data: '<input type="button" value="A" title="Apply this wheel to setup A"/>',
           onclick: () => {
             a.wheel.width.setValue(example.wheel.front.width)
             a.wheel.offset.setValue(example.wheel.front.offset)
             a.wheel.diameter.setValue(example.wheel.front.diameter)
-            a.spacer.setValue(example.front.spacer)
           }
         },
         {
@@ -291,7 +272,6 @@ async function updateExamples() {
             b.wheel.width.setValue(example.wheel.front.width)
             b.wheel.offset.setValue(example.wheel.front.offset)
             b.wheel.diameter.setValue(example.wheel.front.diameter)
-            b.spacer.setValue(example.front.spacer)
           }
         },
         '    ',
@@ -332,16 +312,12 @@ async function updateExamples() {
         )}`,
         ' ' + example.wheel.back.make + ' ' + example.wheel.back.model,
         '    ',
-        'Spacer: ',
-        example.back.spacer,
-        '    ',
         {
           data: '<input type="button" value="A" title="Apply this wheel to setup A"/>',
           onclick: () => {
             a.wheel.width.setValue(example.wheel.back.width)
             a.wheel.offset.setValue(example.wheel.back.offset)
             a.wheel.diameter.setValue(example.wheel.back.diameter)
-            a.spacer.setValue(example.back.spacer)
           }
         },
         {
@@ -350,7 +326,6 @@ async function updateExamples() {
             b.wheel.width.setValue(example.wheel.back.width)
             b.wheel.offset.setValue(example.wheel.back.offset)
             b.wheel.diameter.setValue(example.wheel.back.diameter)
-            b.spacer.setValue(example.back.spacer)
           }
         },
         '    ',

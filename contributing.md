@@ -11,14 +11,11 @@ let titleCase = str =>
 let kebabCase = str => str.toLowerCase().replace(/[^0-9a-z]/g, '-')
 
 let sanitize = str => str.trim().replace(/ +/g, ' ')
-```
 
-And then paste this into the console on each page of the search results:
-
-```javascript
 $('.galad-container')
   .toArray()
   .map(el => {
+    try {
     const staggered = !!$(el)
       .find('#galad-ymm-title .store-ymm-small')
       ?.text()
@@ -36,7 +33,7 @@ $('.galad-container')
     const tireModel = tire.replace(new RegExp(tireBrands.join('|')), '').trim()
 
     // Assume that only the first word of the tire's name is the model. This
-    // won't be correct all of the time, but it's close enough mosst of the time.
+    // won't be correct all of the time, but it's close enough most of the time.
     const wheelBrands = $('#list-params[data-type="wheel_brand"] li')
       .toArray()
       .map(a => sanitize($(a).text()))
@@ -162,5 +159,8 @@ $('.galad-container')
     }
 
     return response
-  })
+
+  } catch {
+      return null
+  }})
 ```

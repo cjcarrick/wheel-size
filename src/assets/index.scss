@@ -1,0 +1,81 @@
+@import url('https://fonts.cdnfonts.com/css/ibm-plex-sans');
+
+:root {
+  font-family: 'IBM Plex Sans', sans-serif;
+  color: $fg1;
+}
+body {
+  background: $bg0;
+  margin: 0;
+}
+
+svg.icon {
+  height: 1em;
+}
+
+a {
+  text-decoration: inherit;
+  color: $col0;
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+header {
+  max-width: $textWidth;
+  margin: 0 auto;
+}
+
+li {
+  margin: $pad 0;
+}
+
+.main-controls {
+  width: 100%;
+  margin: 0 auto;
+  max-width: $textWidth;
+}
+
+.opt-group {
+  width: 100%;
+  margin: 0 auto;
+  font-family: monospace;
+}
+
+.opt-group.graph > label {
+  width: fit-content;
+  margin: 0 auto;
+}
+
+.opt-group.wheel {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: $pad;
+
+  .controls {
+    max-width: $textWidth;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  td {
+    white-space: nowrap;
+  }
+
+  label {
+    font-size: 0.8rem;
+    @include flex-row;
+    gap: 0;
+    margin-left: $pad;
+  }
+
+  input[type='number'] {
+    font-family: monospace;
+    appearance: none;
+    min-width: 9ch;
+    text-align: right;
+  }
+}

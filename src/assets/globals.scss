@@ -1,0 +1,46 @@
+$pad: 0.5rem;
+$br: 0.2rem;
+$maxWidth: 892pt;
+$textWidth: 480pt;
+
+// light theme
+$bg0: #ffffff;
+$bg1: #fafafa;
+$bg2: #f0f0f0;
+$fg0: #999999;
+$fg1: #666666;
+$col0: #5cadd6;
+$col1: #b1d65c;
+
+// // dark theme
+// $bg0: #171719;
+// $bg1: #202023;
+// $bg2: #313135;
+// $fg0: #ffffff;
+// $fg1: #a8a8aa;
+// $col0: #5cadd6;
+// $col1: #b1d65c;
+
+:root {
+  --fg0: #{$fg0};
+  --fg1: #{$fg1};
+  --bg0: #{$bg0};
+  --bg1: #{$bg1};
+  --bg2: #{$bg2};
+  --col0: #{$col0};
+  --col1: #{$col1};
+}
+
+@mixin flex-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: $pad;
+}
+
+@mixin flex-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: $pad;
+}

@@ -23,7 +23,7 @@ import process from 'process'
 //
 
 const srcDir = path.join(process.cwd(), 'src', 'examples')
-const distDir = path.join(process.cwd(), 'dist', 'examples')
+const distDir = path.join(process.cwd(), 'public', 'examples')
 const files = await promises.readdir(srcDir)
 
 // Clear any old files
@@ -33,7 +33,6 @@ if (existsSync(distDir))
   })
 
 function objectsAreTheSame(a, b) {
-
   if (Object.keys(a).length !== Object.keys(b).length) {
     return false
   }
@@ -76,22 +75,38 @@ for (let i = 0; i < files.length; i++) {
 
   const grouped = {}
 
-  function addToGroup(width, offset, item) {
+  function addToGroup(frontWheel, backWheel, frontTire, backTire, rest) {
     if (!(car in index)) {
       index[car] = {}
     }
 
-    if (!(width in grouped)) {
-      index[car][width] = []
-      grouped[width] = {}
-    }
+    for (let wheel of [frontWheel, backWheel]) {
+      let { offset, width } = wheel
 
-    if (!(offset in grouped[width])) {
-      index[car][width].push(offset)
-      grouped[width][offset] = []
-    }
+      if (!(width in grouped)) {
+        index[car][width] = {}
+        grouped[width] = {}
+      }
+      if (!(offset in grouped[width])) {
+        index[car][width][offset] = 0
+        grouped[width][offset] = []
+      }
 
-    grouped[width][offset].push(item)
+      index[car][width][offset]++
+      const completeData = {
+        ...rest,
+        wheel: {
+          front: frontWheel,
+          back: backWheel
+        },
+        tire: {
+          front: frontTire,
+          back: backTire
+        }
+      }
+
+      grouped[width][offset].push(completeData)
+    }
   }
 
   const dat = JSON.parse(await promises.readFile(fileLocation, 'utf8'))
@@ -101,19 +116,41 @@ for (let i = 0; i < files.length; i++) {
 
     // Handle staggered and square setups
     if ('front' in example.wheel) {
-      addToGroup(example.wheel.back.width, example.wheel.back.offset, example)
-
-      const same = objectsAreTheSame(example.wheel.front, example.wheel.back)
-      // Prevent duplicates
-      if (!same) {
+      if ('front' in example.tire) {
         addToGroup(
-          example.wheel.front.width,
-          example.wheel.front.offset,
+          example.wheel.front,
+          example.wheel.back,
+          example.tire.front,
+          example.tire.front,
+          example
+        )
+      } else {
+        addToGroup(
+          example.wheel.front,
+          example.wheel.back,
+          example.tire,
+          example.tire,
           example
         )
       }
     } else {
-      addToGroup(example.wheel.width, example.wheel.offset, example)
+      if ('front' in example.tire) {
+        addToGroup(
+          example.wheel,
+          example.wheel,
+          example.tire.front,
+          example.tire.back,
+          example
+        )
+      } else {
+        addToGroup(
+          example.wheel,
+          example.wheel,
+          example.tire,
+          example.tire,
+          example
+        )
+      }
     }
   }
 
@@ -138,6 +175,6 @@ for (let i = 0; i < files.length; i++) {
 
 await promises.writeFile(
   path.join(distDir, 'index.json'),
-  JSON.stringify(index, null, 2),
+  JSON.stringify(index),
   'utf8'
 )

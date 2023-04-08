@@ -1,8 +1,36 @@
-import { LineDescriptor } from './offsetGraph'
+import {
+  ExamplesIndex,
+  FitmentDescriptor,
+  RequiredFitmentDescriptor,
+  VehicleDescriptor
+} from './types'
 
-const res = await fetch('./examples/index.json')
-export const examplesIndex = (await res.json()) as {
-  [car: string]: { [wheelWidth: string]: number[] }
+export const examplesIndex = async () =>
+  (await (await fetch('./examples/index.json')).json()) as ExamplesIndex
+
+export function isStaggered(wheelDescriptor: RequiredFitmentDescriptor) {
+  let wheel = false
+  let tire = false
+
+  for (let i = 0; i < Object.values(wheelDescriptor.wheel.front).length; i++) {
+    const frontVal = Object.values(wheelDescriptor.wheel.front)[i]
+    const backVal = Object.values(wheelDescriptor.wheel.back)[i]
+    if (frontVal !== backVal) {
+      wheel = true
+      break
+    }
+  }
+
+  for (let i = 0; i < Object.values(wheelDescriptor.tire.front).length; i++) {
+    const frontVal = Object.values(wheelDescriptor.tire.front)[i]
+    const backVal = Object.values(wheelDescriptor.tire.back)[i]
+    if (frontVal !== backVal) {
+      wheel = true
+      break
+    }
+  }
+
+  return { wheel, tire }
 }
 
 export async function fetchExamples(
@@ -10,10 +38,13 @@ export async function fetchExamples(
   width: number,
   offset: number
 ): Promise<RequiredFitmentDescriptor[]> {
-  console.log(examplesIndex)
-  console.log({ car, width, offset })
+  const examples = await examplesIndex()
   // If this car, width, and offset aren't in the index, we don't have it.
-  if (!examplesIndex[car]?.[width]?.includes(offset)) {
+  if (
+    !(car in examples) ||
+    !(width in examples[car]) ||
+    !(offset in examples[car][width])
+  ) {
     console.warn('car not in index')
     return []
   }
@@ -68,13 +99,11 @@ export const parseWheelDescriptor = (
     tire: { front: frontTire, back: backTire },
 
     front: {
-      spacer: descriptor.front?.spacer ?? stock.front.spacer,
       camber: descriptor.front?.camber ?? stock.front.camber,
       toe: descriptor.front?.toe ?? stock.front.toe,
       caster: descriptor.front?.caster ?? stock.front.caster
     },
     back: {
-      spacer: descriptor.rear?.spacer ?? stock.back.spacer,
       camber: descriptor.rear?.camber ?? stock.back.camber,
       toe: descriptor.rear?.toe ?? stock.back.toe,
       caster: descriptor.rear?.caster ?? stock.back.caster
@@ -82,11 +111,8 @@ export const parseWheelDescriptor = (
   }
 }
 
-const examples: {
-  [vehicle: string]: {
-    stock: RequiredFitmentDescriptor
-    guides: LineDescriptor[]
-  }
+const vehicles: {
+  [vehicle: string]: VehicleDescriptor
 } = {
   'Subaru BRZ, Toyota 86, Scion FR-S (13-20)': {
     guides: [
@@ -122,71 +148,16 @@ const examples: {
       link: 'https://www.ft86club.com/forums/showpost.php?p=231439&postcount=3',
       description: 'The stock layout for this car.',
       wheel: {
-        front: { diameter: 17, width: 7, offset: 48 },
-        back: { diameter: 17, width: 7, offset: 48 }
+        front: { diameter: 17, width: 7, offset: 48, },
+        back: { diameter: 17, width: 7, offset: 48, }
       },
       tire: {
         back: { width: 215, aspect: 45, make: 'Michelin', model: 'Primacy HP' },
         front: { width: 215, aspect: 45, make: 'Michelin', model: 'Primacy HP' }
       },
-      front: { camber: 0, caster: 0, toe: 0, spacer: 0 },
-      back: { camber: 0, caster: 0, toe: 0, spacer: 0 }
+      front: { camber: 0, caster: 0, toe: 0, },
+      back: { camber: 0, caster: 0, toe: 0, }
     }
   }
 }
-
-export type TireDescriptor = {
-  width: number
-  aspect: number
-  make?: string
-  model?: string
-}
-
-export type WheelDescriptor = {
-  width: number
-  offset: number
-  diameter: number
-  make?: string
-  model?: string
-  weight?: number
-}
-
-export type FitmentDescriptor = {
-  source: string
-  images: string[]
-  link: string
-  description: string
-  rideheight?: number
-  suspension?: string
-
-  front?: {
-    spacer?: number
-    camber?: number
-    toe?: number
-    caster?: number
-  }
-  rear?: {
-    spacer?: number
-    camber?: number
-    toe?: number
-    caster?: number
-  }
-
-  wheel: WheelDescriptor | { front: WheelDescriptor; back: WheelDescriptor }
-  tire: TireDescriptor | { front: TireDescriptor; back: TireDescriptor }
-}
-
-export type RequiredFitmentDescriptor = {
-  source: string
-  images: string[]
-  link: string
-  description: string
-  rideheight: number
-  suspension: string
-  wheel: { front: WheelDescriptor; back: WheelDescriptor }
-  tire: { front: TireDescriptor; back: TireDescriptor }
-  front: { spacer: number; camber: number; caster: number; toe: number }
-  back: { spacer: number; camber: number; caster: number; toe: number }
-}
-
-export default examples
+export default vehicles
