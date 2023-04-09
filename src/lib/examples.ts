@@ -6,7 +6,7 @@ import {
 } from './types'
 
 export const examplesIndex = async () =>
-  (await (await fetch('./examples/index.json')).json()) as ExamplesIndex
+  (await (await fetch('/wheel-size/examples/index.json')).json()) as ExamplesIndex
 
 export function isStaggered(wheelDescriptor: RequiredFitmentDescriptor) {
   let wheel = false
@@ -51,7 +51,7 @@ export async function fetchExamples(
 
   // Try to make the fetch, and if it fails, return an empty array
   const res = await fetch(
-    `./examples/${encodeURIComponent(car)}/${encodeURIComponent(
+    `/wheel-size/examples/${encodeURIComponent(car)}/${encodeURIComponent(
       width
     )}/${encodeURIComponent(offset)}.json`
   )

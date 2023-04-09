@@ -5,7 +5,7 @@ import NumberInput from './NumberInput.vue'
 defineProps<{ vehicle: string; rideheight: number }>()
 defineEmits(['update:vehicle', 'update:rideheight'])
 
-const res = await fetch('/examples/index.json')
+const res = await fetch('/wheel-size/examples/index.json')
 const examplesIndex = (await res.json()) as {
   [car: string]: { [wheelWidth: string]: number[] }
 }

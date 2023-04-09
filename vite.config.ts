@@ -5,7 +5,7 @@ import { defineConfig } from 'vite'
 export default defineConfig({
   plugins: [vue()],
 
-  publicDir: './dist/',
+  base: '/wheel-size/',
 
   css: {
     preprocessorOptions: {
