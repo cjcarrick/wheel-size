@@ -1,7 +1,6 @@
-# brz-wheel-size
+# https://cjcarrick.github.io/wheel-size
 
-To keep things lightweight and functional, this does not have any dependencies.
-CSS is also kept to a minimum.
+# Wheel Size Visualizer
 
 All files are static--there is no real backend server or database that stores the
 data. All data on example setups comes from `src/examples/*`. Update those
