@@ -115,30 +115,30 @@ const vehicles: {
   [vehicle: string]: VehicleDescriptor
 } = {
   'Subaru BRZ, Toyota 86, Scion FR-S (13-20)': {
-    guides: [
-      {
-        label: 'Perfect Front Flushness',
-        color: 'red',
-        offsetEquation: (wheelWidth, rideheight) =>
-          // +12.7 mm per 1 inch of wheel width
-          12.7 * wheelWidth -
-          // -64.3 as the base
-          64.3 -
-          // -2 mm per 1 inch drop
-          2 * rideheight
-      },
-      {
-        label: 'Perfect Rear Flushness',
-        color: 'green',
-        offsetEquation: (wheelWidth, rideHeight) =>
-          // +12.7 mm per 1 inch of wheel width
-          12.7 * wheelWidth -
-          // -64.3 as the base
-          71.1 -
-          // -5 mm per 1 inch drop
-          5 * rideHeight
-      }
-    ],
+    // guides: [
+    //   {
+    //     label: 'Perfect Front Flushness',
+    //     color: 'red',
+    //     offsetEquation: (wheelWidth, rideheight) =>
+    //       // +12.7 mm per 1 inch of wheel width
+    //       12.7 * wheelWidth -
+    //       // -64.3 as the base
+    //       64.3 -
+    //       // -2 mm per 1 inch drop
+    //       2 * rideheight
+    //   },
+    //   {
+    //     label: 'Perfect Rear Flushness',
+    //     color: 'green',
+    //     offsetEquation: (wheelWidth, rideHeight) =>
+    //       // +12.7 mm per 1 inch of wheel width
+    //       12.7 * wheelWidth -
+    //       // -64.3 as the base
+    //       71.1 -
+    //       // -5 mm per 1 inch drop
+    //       5 * rideHeight
+    //   }
+    // ],
 
     stock: {
       suspension: 'None',

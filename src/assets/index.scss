@@ -1,5 +1,9 @@
 @import url('https://fonts.cdnfonts.com/css/ibm-plex-sans');
 
+body {
+  overflow-x: hidden;
+}
+
 :root {
   font-family: 'IBM Plex Sans', sans-serif;
   color: $fg1;

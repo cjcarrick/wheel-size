@@ -1,3 +1,5 @@
+import { TireDescriptor, WheelDescriptor } from './types'
+
 export function mapRange(
   number: number,
   fromMin: number,
@@ -54,4 +56,34 @@ export function objectsAreTheSame(
   }
 
   return true
+}
+
+export function getCssVar(key: string, el = document.body) {
+  const style = window.getComputedStyle(el)
+  const v = style.getPropertyValue('--' + key)
+  return v
+}
+
+export const outerDiameter = (set: {
+  wheel: WheelDescriptor
+  tire: TireDescriptor
+}) => {
+  let c = set.tire.width * set.tire.aspect * 0.01
+  let b = (mm(set.wheel.width) - set.tire.width) * 0.5
+  let a = (c ** 2 - b ** 2) ** 0.5
+  a = isNaN(a) ? 0 : a
+
+  return a * 2 + mm(set.wheel.diameter)
+}
+
+const mm = (inches: number) => inches * 25.4
+
+export const speedoError = (
+  set1: { wheel: WheelDescriptor; tire: TireDescriptor },
+  set2: { wheel: WheelDescriptor; tire: TireDescriptor }
+) => {
+  const circumference1 = Math.PI * outerDiameter(set1)
+  const circumference2 = Math.PI * outerDiameter(set2)
+  const diff = (circumference2 - circumference1) / circumference1
+  return diff
 }

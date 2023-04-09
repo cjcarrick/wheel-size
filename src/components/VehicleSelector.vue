@@ -17,6 +17,7 @@ const examplesIndex = (await res.json()) as {
       <th>Vehicle</th>
       <td>
         <Dropdown
+        class="dropdown"
           :choices="Object.keys(examplesIndex)"
           :model-value="vehicle"
           @update:model-value="a => $emit('update:vehicle', a)"
@@ -24,20 +25,20 @@ const examplesIndex = (await res.json()) as {
       </td>
     </tr>
 
-    <tr>
-      <th>Ride Height Modification (Inches)</th>
-      <td>
-        <NumberInput
-          :min="-6"
-          :max="12"
-          :default-value="0"
-          :step="0.25"
-          :model-value="rideheight"
-          :precision="2"
-          @update:modelValue="a => $emit('update:rideheight', a)"
-        />
-      </td>
-    </tr>
+    <!-- <tr> -->
+    <!--   <th>Ride Height Modification (Inches)</th> -->
+    <!--   <td> -->
+    <!--     <NumberInput -->
+    <!--       :min="-6" -->
+    <!--       :max="12" -->
+    <!--       :default-value="0" -->
+    <!--       :step="0.25" -->
+    <!--       :model-value="rideheight" -->
+    <!--       :precision="2" -->
+    <!--       @update:modelValue="a => $emit('update:rideheight', a)" -->
+    <!--     /> -->
+    <!--   </td> -->
+    <!-- </tr> -->
   </table>
 </template>
 
@@ -45,6 +46,10 @@ const examplesIndex = (await res.json()) as {
 ._examples {
   width: 100%;
   border-spacing: 0 $pad;
+
+  .dropdown {
+    min-width: 4rem;
+  }
 
   th {
     font-size: 0.75rem;

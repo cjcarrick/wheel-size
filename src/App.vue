@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import { reactive, ref, UnwrapNestedRefs } from 'vue'
-import CalculatedResults from './components/CalculatedResults.vue'
 import ExamplesList from './components/ExamplesList.vue'
 import OffsetGraph from './components/OffsetGraph.vue'
+import SpeedoErrorGraph from './components/SpeedoErrorGraph.vue'
 import VehicleSelector from './components/VehicleSelector.vue'
 import WheelControls from './components/WheelControls.vue'
-import WheelVisualizerSvg from './components/WheelVisualizer.vue'
-import { getCssVar } from './lib/dom'
+import WheelVisualizer from './components/WheelVisualizer.vue'
+import { getCssVar } from './lib'
 import vehicles from './lib/examples'
 import { TireDescriptor, WheelDescriptor } from './lib/types'
 
@@ -20,11 +20,7 @@ type ReactiveSet = UnwrapNestedRefs<{
 let numSets = 0
 function createSet(): ReactiveSet {
   const newSet = {
-    wheel: {
-      width: 9.5,
-      diameter: 18,
-      offset: 38
-    },
+    wheel: { width: 9.5, diameter: 18, offset: 38 },
     tire: { width: 255, aspect: 35 },
     color: getCssVar(`col${numSets++}`),
     locked: false
@@ -76,36 +72,47 @@ const offset = ref(0)
         v-model:locked="set.locked"
       />
 
-      <WheelVisualizerSvg
+      <WheelVisualizer
         :sets="[set]"
+        :sets-are-reactive="true"
         :rideheight="0"
         :lines="[
-          ...(vehicles[vehicle]?.guides ?? []),
-          { label: 'Mounting Point', color: 'var(--fg0)', x: 0 }
-        ]"
-        :scale="0.1"
-      />
-    </section>
-
-    <section class="_wheels">
-      <CalculatedResults :set1="sets[0]" :set2="sets[1]" />
-
-      <WheelVisualizerSvg
-        :sets="sets"
-        :rideheight="rideheight"
-        :lines="[
-          ...(vehicles[vehicle]?.guides ?? []),
           { label: 'Mounting Point', color: () => getCssVar('fg0'), x: 0 }
         ]"
         :scale="0.1"
       />
     </section>
 
+    <section class="_wheels">
+      <h2>Summary</h2>
+      <div class="row">
+        <WheelVisualizer
+          :sets="sets"
+          :sets-are-reactive="true"
+          :rideheight="rideheight"
+          :lines="[
+            { label: 'Mounting Point', color: () => getCssVar('fg0'), x: 0 }
+          ]"
+          :scale="0.1"
+        />
+
+        <div class="speedo col">
+          <h3>Speedo Error</h3>
+          <SpeedoErrorGraph :sets="sets" />
+          <p>
+            A change in the outer diameter my result in the speedometer reading
+            incorrectly. Assuming that the green line represents the readings
+            from OEM tires, the blue represents new speedometer readings.
+          </p>
+        </div>
+      </div>
+    </section>
+
     <section class="graph">
       <Suspense>
         <OffsetGraph
           :sets="sets"
-          :lines="vehicles[vehicle]?.guides ?? []"
+          :lines="[]"
           :vehicle="vehicle"
           :rideheight="rideheight"
           v-model:offset="offset"
@@ -173,6 +180,7 @@ main {
   align-items: center;
   flex-wrap: wrap;
   padding: $pad;
+
   section {
     position: relative;
     border-radius: $br;
@@ -180,15 +188,15 @@ main {
     border: 1px solid $bg2;
     box-sizing: border-box;
 
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    // display: flex;
+    // align-items: center;
+    // justify-content: center;
   }
 }
 
 section {
   width: 100%;
-  // box-sizing: border-box;
+  box-sizing: border-box;
   max-width: $maxWidth;
   padding: $pad;
   margin: $pad * 0.5 auto;
@@ -200,8 +208,7 @@ section {
   margin: 1rem auto;
 }
 
-._wheel,
-._wheels {
+._wheel {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
@@ -225,5 +232,32 @@ section {
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+.row {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: $pad;
+}
+.col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: $pad;
+}
+
+h2 {
+  text-align: center;
+}
+
+.speedo {
+  h3,
+  p {
+    margin: 0;
+  }
+  p {
+    max-width: 512px;
+  }
 }
 </style>

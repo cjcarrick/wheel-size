@@ -17,7 +17,6 @@ export type ExamplesIndex = {
 
 export type VehicleDescriptor = {
   stock: RequiredFitmentDescriptor
-  guides: LineDescriptor[]
 }
 
 export type TireDescriptor = {

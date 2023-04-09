@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { MagnifyingGlassIcon } from '@heroicons/vue/20/solid'
 import { ref, watch } from 'vue'
-import { getCssVar } from '../lib/dom'
+import { getCssVar } from '../lib'
 import { fetchExamples, isStaggered } from '../lib/examples'
 import fuzzyFind from '../lib/fuzzyFind'
 import { RequiredFitmentDescriptor } from '../lib/types'
@@ -172,6 +172,7 @@ function parseRow(query: string, setups: RequiredFitmentDescriptor[]) {
                     color: getCssVar('fg0')
                   }
                 ]"
+                :sets-are-reactive="false"
                 :height="150"
                 :width="60"
                 :watch="false"
@@ -203,6 +204,7 @@ function parseRow(query: string, setups: RequiredFitmentDescriptor[]) {
                     color: getCssVar('fg0')
                   }
                 ]"
+                :sets-are-reactive="false"
                 :height="150"
                 :width="60"
                 :watch="false"
@@ -275,7 +277,7 @@ function parseRow(query: string, setups: RequiredFitmentDescriptor[]) {
     overflow-x: auto;
     display: block;
     border-spacing: 0;
-    margin: 0 -1 * $pad;
+    margin: $pad -1 * $pad 0 -1 * $pad;
   }
   td {
     padding: 0;

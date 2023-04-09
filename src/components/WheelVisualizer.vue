@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, UnwrapNestedRefs, watch } from 'vue'
+import { outerDiameter } from '../lib'
 import { LineDescriptor, TireDescriptor, WheelDescriptor } from '../lib/types'
 
 type DataSet = UnwrapNestedRefs<{
@@ -10,6 +11,7 @@ type DataSet = UnwrapNestedRefs<{
 
 const props = defineProps<{
   sets: DataSet[]
+  setsAreReactive: boolean
   lines?: LineDescriptor[]
   rideheight?: number
   /** when scale = 1, 1mm = 1px */
@@ -53,13 +55,13 @@ const linesData = ref<{ color: string; x: number; label: string }[]>([])
 // 1mm = 1px on the canvas
 const mm = (inches: number) => inches * 25.4
 
-// draw guide lines
-
 createSvgData()
-watch(props.sets, createSvgData)
+if (props.setsAreReactive) {
+  watch(props.sets, createSvgData)
+}
 
 createLinesData()
-watch(() => props.lines, createLinesData)
+// watch(() => props.lines, createLinesData)
 
 function createSvgData() {
   wheelData.value = []
@@ -198,6 +200,55 @@ const pad = 3
         :stroke="l.color"
       />
     </g>
+
+    <!-- Annotations -->
+    <!-- (Disabled because it's too hard to read) -->
+    <!-- <g v-if="props.annotate" stroke-width="1px" stroke="black"> -->
+    <!--   <template v-for="(s, i) in wheelData"> -->
+    <!--     <line -->
+    <!--       :x1="s.x - s.tireOffsetX + s.w" -->
+    <!--       :y1="s.y - s.tireOffsetY" -->
+    <!--       :x2="s.x - s.tireOffsetX + s.w + 16" -->
+    <!--       :y2="s.y - s.tireOffsetY + (i % 2) * s.h + (1 + i) * 16" -->
+    <!--     /> -->
+    <!--     <line -->
+    <!--       :x1="s.x - s.tireOffsetX + s.w" -->
+    <!--       :y1="s.y + s.tireOffsetY + s.h" -->
+    <!--       :x2="s.x - s.tireOffsetX + s.w + 16" -->
+    <!--       :y2="s.y - s.tireOffsetY + (i % 2) * s.h + (1 + i) * 16" -->
+    <!--     /> -->
+    <!--     <text -->
+    <!--       :x="s.x + 18 - s.tireOffsetX + s.w" -->
+    <!--       :y="s.y - s.tireOffsetY + (i % 2) * s.h + (1 + i) * 16" -->
+    <!--       font-size="14" -->
+    <!--       stroke="none" -->
+    <!--       fill="black" -->
+    <!--     > -->
+    <!--       Outer Diameter: {{ outerDiameter(props.sets[i]).toFixed(1) }} mm -->
+    <!--     </text> -->
+    <!---->
+    <!--     <line -->
+    <!--       :x1="s.x" -->
+    <!--       :y1="s.y + s.h + s.tireOffsetY + 16" -->
+    <!--       x2="50%" -->
+    <!--       :y2="s.y + s.h + s.tireOffsetY + 16" -->
+    <!--     /> -->
+    <!--     <text -->
+    <!--       :x="s.x" -->
+    <!--       :y="s.y + s.h + s.tireOffsetY + 16 + 16" -->
+    <!--       font-size="14" -->
+    <!--       stroke="none" -->
+    <!--       fill="black" -->
+    <!--     > -->
+    <!--       Poke: -->
+    <!--       {{ -->
+    <!--         ( -->
+    <!--           props.sets[i].wheel.offset + mm(props.sets[i].wheel.width) -->
+    <!--         ).toFixed(1) -->
+    <!--       }} -->
+    <!--       mm -->
+    <!--     </text> -->
+    <!--   </template> -->
+    <!-- </g> -->
   </svg>
 </template>
-

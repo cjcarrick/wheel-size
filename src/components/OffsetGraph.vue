@@ -90,18 +90,9 @@ function yVal(y: number): number {
   )
 }
 
-onMounted(() => {
-  nextTick(() => {
-    console.log(svg.value)
-    console.log(svg.value?.getBoundingClientRect().width)
-    console.log(xVal(500), xPos(12))
-  })
-})
-
 /** returns the width that a certain x value on the graph represents
  * eg: in -> px */
 function xPos(width: number): number {
-  console.log(svg.value?.getBoundingClientRect().width)
   return mapRange(
     width,
     wheelWidthMin,
@@ -136,10 +127,10 @@ onMounted(() => {
   const container = el.parentElement!
 
   const pad = parseInt(window.getComputedStyle(container).paddingTop, 10)
-  // new ResizeObserver(([el]) => {
-  //   svgWidth.value = el.contentRect.width ?? 0 - pad * 2
-  //   svgHeight.value = el.contentRect.height ?? 0 - pad * 2
-  // }).observe(container)
+  new ResizeObserver(([el]) => {
+    svgWidth.value = el.contentRect.width ?? 0 - pad * 2
+    svgHeight.value = el.contentRect.height ?? 0 - pad * 2
+  }).observe(container)
 })
 
 const onClick = (ev: MouseEvent) => {
@@ -225,7 +216,6 @@ const onMove = (ev: MouseEvent) => {
 
       const pokePre = width / 2 - offset
       const offsetValue = -pokePre + width / 2
-      console.log({ pokePre, offsetValue })
 
       hovered.value = { x: initX, y: yPos(offsetValue) }
     } else {
@@ -328,92 +318,6 @@ const onMove = (ev: MouseEvent) => {
           :x2="hovered.x"
         />
       </g>
-    </g>
-
-    <!-- Guide lines for when shift key is held -->
-    <g v-if="initialClick" stroke-width="1">
-      <line
-        :stroke="snapY ? 'rgba(255,0,0,0.25)' : 'red'"
-        x1="0"
-        :x2="svgWidth"
-        :y1="initialClick.y"
-        :y2="initialClick.y"
-      />
-
-      <!-- This line is clculated using the point-slope formula, where the slope is -->
-      <!-- 12.7mm/in -->
-      <line
-        :stroke="snapAngle ? 'rgba(0,255,0,0.25)' : 'green'"
-        x1="0"
-        :x2="svgWidth"
-        :y1="
-          -(yPos(offsetMax - 12.7) / xPos(wheelWidthMin + 1)) *
-            (0 - initialClick.x) +
-          initialClick.y
-        "
-        :y2="
-          -(yPos(offsetMax - 12.7) / xPos(wheelWidthMin + 1)) *
-            (svgWidth - initialClick.x) +
-          initialClick.y
-        "
-      />
-
-      <line
-        :stroke="snapX ? 'rgba(255,0,0,0.25)' : 'red'"
-        :x1="initialClick.x"
-        :x2="initialClick.x"
-        y1="0"
-        :y2="svgHeight"
-      />
-    </g>
-
-    <!-- Guide lines -->
-    <g>
-      <template v-for="l in lines">
-        <line
-          v-if="'offsetEquation' in l"
-          :stroke="typeof l.color == 'string' ? l.color : l.color()"
-          x1="0"
-          :y1="yPos(l.offsetEquation(xVal(0), rideheight))"
-          :x2="svgWidth"
-          :y2="yPos(l.offsetEquation(xVal(svgWidth), rideheight))"
-        />
-
-        <g
-          v-if="'offsetEquation' in l"
-          :transform="`rotate(${
-            (Math.atan2(
-              yPos(l.offsetEquation(xVal(svgWidth), rideheight)) -
-                yPos(l.offsetEquation(xVal(0), rideheight)),
-              svgWidth
-            ) *
-              360) /
-            2 /
-            Math.PI
-          } ${xPos(wheelWidthMin + 0.5)} ${yPos(
-            l.offsetEquation(xVal(0), rideheight)
-          )})`"
-        >
-          <text
-            :x="xPos(wheelWidthMin + 0.5)"
-            :y="yPos(l.offsetEquation(wheelWidthMin + 0.5, rideheight)) - 4"
-            stroke="white"
-            stroke-width="3px"
-            font-size="12"
-          >
-            {{ typeof l.label == 'string' ? l.label : l.label() }}
-          </text>
-
-          <text
-            :x="xPos(wheelWidthMin + 0.5)"
-            :y="yPos(l.offsetEquation(wheelWidthMin + 0.5, rideheight)) - 4"
-            :fill="typeof l.color == 'string' ? l.color : l.color()"
-            font-size="12"
-          >
-            {{ typeof l.label == 'string' ? l.label : l.label() }}
-          </text>
-        </g>
-      </template>
     </g>
 
     <!-- circles for the data sets -->

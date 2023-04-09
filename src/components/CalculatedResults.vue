@@ -15,7 +15,7 @@ const outerPoke = (set: ReactiveSet) => {
   return set.wheel.offset + mm(set.wheel.width)
 }
 
-const outerDiamere = (set: ReactiveSet) => {
+const outerDiameter = (set: ReactiveSet) => {
   let c = set.tire.width * set.tire.aspect * 0.01
   let b = (mm(set.wheel.width) - set.tire.width) * 0.5
   let a = (c ** 2 - b ** 2) ** 0.5
@@ -25,8 +25,8 @@ const outerDiamere = (set: ReactiveSet) => {
 }
 
 const speedoError = computed(() => {
-  const circumference1 = Math.PI * outerDiamere(props.set1)
-  const circumference2 = Math.PI * outerDiamere(props.set2)
+  const circumference1 = Math.PI * outerDiameter(props.set1)
+  const circumference2 = Math.PI * outerDiameter(props.set2)
   const diff = (circumference2 - circumference1) / circumference1
   return diff
 })
@@ -53,9 +53,9 @@ const speedoError = computed(() => {
     </tr>
     <tr>
       <td>Outer Diameter (mm)</td>
-      <td>{{ outerDiamere(set1).toFixed(1) }}</td>
-      <td>{{ outerDiamere(set2).toFixed(1) }}</td>
-      <td>{{ (outerDiamere(set2) - outerDiamere(set1)).toFixed(1) }}</td>
+      <td>{{ outerDiameter(set1).toFixed(1) }}</td>
+      <td>{{ outerDiameter(set2).toFixed(1) }}</td>
+      <td>{{ (outerDiameter(set2) - outerDiameter(set1)).toFixed(1) }}</td>
     </tr>
     <tr>
       <td>Poke (mm)</td>
@@ -76,7 +76,7 @@ const speedoError = computed(() => {
       <td>--</td>
       <td>--</td>
       <td>
-        {{ ((outerDiamere(set2) - outerDiamere(set1)) / 2).toFixed(1) }}
+        {{ ((outerDiameter(set2) - outerDiameter(set1)) / 2).toFixed(1) }}
       </td>
     </tr>
   </table>
