@@ -169,7 +169,7 @@ function parseRow(query: string, setups: RequiredFitmentDescriptor[]) {
                   {
                     wheel: dat[i].wheel.front,
                     tire: dat[i].tire.front,
-                    color: getCssVar('fg0')
+                    color: () => getCssVar('fg0')
                   }
                 ]"
                 :sets-are-reactive="false"
@@ -201,7 +201,7 @@ function parseRow(query: string, setups: RequiredFitmentDescriptor[]) {
                   {
                     wheel: dat[i].wheel.front,
                     tire: dat[i].tire.front,
-                    color: getCssVar('fg0')
+                    color: () => getCssVar('fg0')
                   }
                 ]"
                 :sets-are-reactive="false"

@@ -6,7 +6,7 @@ import { TireDescriptor, WheelDescriptor } from '../lib/types'
 type DataSet = UnwrapNestedRefs<{
   wheel: WheelDescriptor
   tire: TireDescriptor
-  color: string
+  color: () => string
 }>
 
 const props = defineProps<{
@@ -80,7 +80,6 @@ function xVal(x: number): number {
 }
 
 const svg = ref<null | HTMLElement>()
-
 </script>
 
 <template>
@@ -95,7 +94,7 @@ const svg = ref<null | HTMLElement>()
       :y1="max * scale"
       :x2="max * scale"
       :y2="max * scale * error"
-      :stroke="props.sets[0].color"
+      :stroke="props.sets[0].color()"
       stroke-width="1px"
     />
 
@@ -104,7 +103,7 @@ const svg = ref<null | HTMLElement>()
       :y1="max * scale"
       :x2="max * scale"
       y2="0"
-      :stroke="props.sets[1].color"
+      :stroke="props.sets[1].color()"
       stroke-width="1px"
     />
 
@@ -112,7 +111,7 @@ const svg = ref<null | HTMLElement>()
       <circle
         :cx="(max * scale * i) / points"
         :cy="max * scale * (1 - i / points)"
-        :fill="props.sets[1].color"
+        :fill="props.sets[1].color()"
         r="2"
       />
 
@@ -137,7 +136,7 @@ const svg = ref<null | HTMLElement>()
       <circle
         :cx="max * scale * (i / points)"
         :cy="max * scale - max * scale * (i / points) * (1 - error)"
-        :fill="props.sets[0].color"
+        :fill="props.sets[0].color()"
         r="2"
       />
 

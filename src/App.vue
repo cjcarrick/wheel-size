@@ -13,23 +13,25 @@ import { TireDescriptor, WheelDescriptor } from './lib/types'
 type ReactiveSet = UnwrapNestedRefs<{
   wheel: WheelDescriptor
   tire: TireDescriptor
-  color: string
+  color: () => string
   locked: boolean
 }>
 
-let numSets = 0
-function createSet(): ReactiveSet {
+function createSet(color: () => string): ReactiveSet {
   const newSet = {
     wheel: { width: 9.5, diameter: 18, offset: 38 },
     tire: { width: 255, aspect: 35 },
-    color: getCssVar(`col${numSets++}`),
+    color,
     locked: false
   }
 
   return reactive(newSet)
 }
 
-const sets: ReactiveSet[] = [createSet(), createSet()]
+const sets: ReactiveSet[] = [
+  createSet(() => getCssVar('col0')),
+  createSet(() => getCssVar('col1'))
+]
 
 const vehicle = ref('')
 const rideheight = ref(0)

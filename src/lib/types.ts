@@ -1,6 +1,6 @@
 export type LineDescriptor = {
   label: string | (() => string)
-  color: string | (() => string)
+  color: () => string
 } & (
     | { offsetEquation: (wheelWidth: number, rideHeight: number) => number }
     | { x: ((wheelWidth: number, offset: number) => number) | number }

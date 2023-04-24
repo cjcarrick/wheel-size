@@ -155,6 +155,7 @@ function handleMouseDown(ev: MouseEvent) {
 ._number-input {
   input[type='number'] {
     -moz-appearance: textfield;
+    &::-webkit-inner-spin-button,
     &::-webkit-outer-spin-button {
       margin: 0;
       -webkit-appearance: none;

@@ -1,12 +1,11 @@
 <script setup lang="ts">
 import { ref, UnwrapNestedRefs, watch } from 'vue'
-import { outerDiameter } from '../lib'
 import { LineDescriptor, TireDescriptor, WheelDescriptor } from '../lib/types'
 
 type DataSet = UnwrapNestedRefs<{
   wheel: WheelDescriptor
   tire: TireDescriptor
-  color: string
+  color: () => string
 }>
 
 const props = defineProps<{
@@ -46,11 +45,11 @@ const wheelData = ref<
     /** How far the outermost y coordinate is from the y coordinate specified above */
     tireOffsetY: number
 
-    color: string
+    color: () => string
   }[]
 >([])
 
-const linesData = ref<{ color: string; x: number; label: string }[]>([])
+const linesData = ref<{ color: () => string; x: number; label: string }[]>([])
 
 // 1mm = 1px on the canvas
 const mm = (inches: number) => inches * 25.4
@@ -139,21 +138,17 @@ function createLinesData() {
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i]
 
-    const color = typeof line.color == 'string' ? line.color : line.color()
     const label = typeof line.label == 'string' ? line.label : line.label()
 
     for (let j = 0; j < props.sets.length; j++) {
       linesData.value.push({
         x: XPosition(line, props.sets[j].wheel),
-        color,
+        color: line.color,
         label
       })
     }
   }
 }
-
-const fontSize = 0.8
-const pad = 3
 </script>
 
 <template>
@@ -162,8 +157,8 @@ const pad = 3
     <g
       v-for="s in wheelData"
       stroke-width="2px"
-      :stroke="s.color"
-      :fill="s.color + (50).toString(16)"
+      :stroke="s.color()"
+      :fill="s.color() + (50).toString(16)"
     >
       <!-- Wheel -->
       <rect :x="s.x" :y="s.y" :width="s.w" :height="s.h" />
@@ -197,7 +192,7 @@ const pad = 3
         y1="0"
         :y2="height"
         stroke-width="2px"
-        :stroke="l.color"
+        :stroke="l.color()"
       />
     </g>
 
