@@ -42,28 +42,6 @@ const offset = ref(0)
 </script>
 
 <template>
-  <nav>
-    <h3>Wheel and Tire Size visualizer</h3>
-  </nav>
-
-  <section>
-    <p class="constrain">
-      It can be difficult to tell what size wheels and tires will fit your car,
-      and what the result will look like. This tool aims to help visualize this,
-      as well as present examples of what other people with that car are
-      running.
-    </p>
-
-    <p class="constrain">
-      Note that other sites exist that perform similar functionality, but they
-      are usually trying first and foremost to sell wheels, and their
-      visualizations and calculations are often incorrect. This site uses proper
-      trignometric calculations to accurately determine figures like outer
-      diameter, etc. Additionally, no other sites provide both visualizations
-      and quick reference to setups from the community.
-    </p>
-  </section>
-
   <main>
     <section class="_wheel" v-for="set in sets">
       <WheelControls
@@ -145,11 +123,7 @@ const offset = ref(0)
 
   <footer>
     <div class="constrain">
-      <p>
-        This project is
-        <a href="https://github.com/cjcarrick/wheel-size">open source</a> and
-        contributions are welcome.
-      </p>
+      <p><a href="https://github.com/cjcarrick/wheel-size">Source</a></p>
     </div>
   </footer>
 </template>
@@ -159,17 +133,8 @@ const offset = ref(0)
 </style>
 
 <style lang="scss">
-nav,
 footer {
   background: $bg1;
-}
-nav {
-  padding: 1rem $pad;
-  h3 {
-    margin: 0;
-  }
-}
-footer {
   margin-top: 8rem;
   padding: 6rem $pad 8rem $pad;
   p {
