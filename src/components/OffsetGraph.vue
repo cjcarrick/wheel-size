@@ -129,7 +129,7 @@ onMounted(() => {
   const pad = parseInt(window.getComputedStyle(container).paddingTop, 10)
   new ResizeObserver(([el]) => {
     svgWidth.value = el.contentRect.width ?? 0 - pad * 2
-    svgHeight.value = el.contentRect.height ?? 0 - pad * 2
+    // svgHeight.value = el.contentRect.height ?? 0 - pad * 2
   }).observe(container)
 })
 
@@ -244,8 +244,8 @@ const onMove = (ev: MouseEvent) => {
 <template>
   <svg
     class="_graph"
-    :height="svgHeight"
-    :width="svgWidth"
+    height="100%"
+    width="100%"
     :viewBox="`0 0 ${svgWidth} ${svgHeight}`"
     ref="svg"
     :class="{ frozen, snap: snapX || snapY }"
@@ -344,7 +344,7 @@ const onMove = (ev: MouseEvent) => {
         :y="yPos(s.wheel.offset) + 6"
         font-size="14"
         stroke-width="4"
-        stroke="var(--bg0)"
+        stroke="var(--bg1)"
       >
         {{ s.wheel.diameter }}x{{ s.wheel.width }}
         {{ s.wheel.offset < 0 ? '' : '+' }}{{ s.wheel.offset }}
@@ -372,7 +372,10 @@ const onMove = (ev: MouseEvent) => {
 </template>
 
 <style lang="scss">
-._graph:not(.frozen):not(.snap) {
-  cursor: none;
+._graph {
+	cursor: default;
+	&:not(.frozen) {
+		cursor: none;
+	}
 }
 </style>

@@ -121,7 +121,7 @@ const reset = () => {
           :checked="locked"
           @update:checked="a => $emit('update:locked', a)"
         >
-          {{ locked ? 'Locked' : 'Lock' }}
+          {{ locked ? 'Unlock' : 'Lock' }}
         </Button>
       </td>
     </tr>

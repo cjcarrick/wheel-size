@@ -25,6 +25,7 @@ const rowVisible = ref<boolean[]>([])
 
 const getData = async () => {
   let res = await fetchExamples(props.vehicle, props.width, props.offset)
+	if (res.length == 0) console.warn('message', props.vehicle, props.offset, props.width)
   dat.value = []
   staggers.value = []
   let used: string[] = []
@@ -118,257 +119,214 @@ function parseRow(query: string, setups: RequiredFitmentDescriptor[]) {
 </script>
 
 <template>
-  <TextInput v-model="filter" placeholder="Filter">
-    <MagnifyingGlassIcon />
-  </TextInput>
-
+	<h2>Gallery ({{ dat.length }} Results)</h2>
   <div class="_list">
-    <table v-if="dat.length">
-      <thead>
-        <tr>
-          <th></th>
-          <th colspan="2">Front</th>
-          <th colspan="2">Rear</th>
-        </tr>
-      </thead>
+    <div class="search-bar-container">
+      <TextInput class="search-bar" v-model="filter" placeholder="Filter">
+        <MagnifyingGlassIcon />
+      </TextInput>
+      <p class="num-results">
+        <template v-if="filter">
+          Shown:
+          {{
+            rowVisible.reduce(
+              (prev, curr) => prev + (curr as unknown as number),
+              0
+            )
+          }}
+          of {{ dat.length }} total results
+        </template>
+      </p>
+    </div>
 
-      <tbody>
-        <template v-for="(isStaggered, i) in staggers">
-          <tr v-show="rowVisible[i]" :class="{ staggered: isStaggered }">
-            <th>
-              <h3>
-                <a :href="dat[i].link">
-                  <h4>
-                    <FuzzyResults
-                      :query="filter"
-                      :sliced-results="rows.slices[0 + i * 10]"
-                    />
-                  </h4>
-                </a>
-              </h3>
-            </th>
-
-            <td class="wheel front">
+    <div v-if="dat.length">
+      <template v-for="(isStaggered, i) in staggers">
+        <div
+          class="row"
+          v-show="rowVisible[i]"
+          :class="{ staggered: isStaggered }"
+        >
+          <h3>
+            <a :href="dat[i].link">
               <h4>
+                <FuzzyResults
+                  :query="filter"
+                  :sliced-results="rows.slices[0 + i * 10]"
+                />
+              </h4>
+            </a>
+          </h3>
+
+          <h3>
+            <FuzzyResults
+              :query="filter"
+              :sliced-results="rows.slices[1 + i * 10]"
+            />
+          </h3>
+
+          <div>
+            <p class="front-or-rear" v-if="isStaggered">Front</p>
+            <div class="wheel-tire-container">
+              <p class="wheel-name">
                 <FuzzyResults
                   :query="filter"
                   :sliced-results="rows.slices[2 + i * 10]"
                 />
-              </h4>
-              <p>
+              </p>
+              <p class="wheel-size">
                 <FuzzyResults
                   :query="filter"
                   :sliced-results="rows.slices[3 + i * 10]"
                 />
               </p>
-            </td>
 
-            <td class="visualizer front" rowspan="2">
-              <WheelVisualizer
-                :sets="[
-                  {
-                    wheel: dat[i].wheel.front,
-                    tire: dat[i].tire.front,
-                    color: () => getCssVar('fg0')
-                  }
-                ]"
-                :sets-are-reactive="false"
-                :height="150"
-                :width="60"
-                :watch="false"
-                position="top-left"
-              />
-            </td>
-
-            <td class="wheel" :class="{ back: !filter }">
-              <h4>
-                <FuzzyResults
-                  :query="filter"
-                  :sliced-results="rows.slices[6 + i * 10]"
-                />
-              </h4>
-              <p>
-                <FuzzyResults
-                  :query="filter"
-                  :sliced-results="rows.slices[7 + i * 10]"
-                />
-              </p>
-            </td>
-
-            <td class="visualizer" rowspan="2" :class="{ back: !filter }">
-              <WheelVisualizer
-                :sets="[
-                  {
-                    wheel: dat[i].wheel.front,
-                    tire: dat[i].tire.front,
-                    color: () => getCssVar('fg0')
-                  }
-                ]"
-                :sets-are-reactive="false"
-                :height="150"
-                :width="60"
-                :watch="false"
-                position="top-left"
-              />
-            </td>
-          </tr>
-
-          <tr v-show="rowVisible[i]">
-            <th>
-              <h3>
-                <FuzzyResults
-                  :query="filter"
-                  :sliced-results="rows.slices[1 + i * 10]"
-                />
-              </h3>
-            </th>
-
-            <td class="tire front">
-              <h4>
+              <p class="tire-name">
                 <FuzzyResults
                   :query="filter"
                   :sliced-results="rows.slices[4 + i * 10]"
                 />
-              </h4>
-              <p>
+              </p>
+              <p class="tire-size">
                 <FuzzyResults
                   :query="filter"
                   :sliced-results="rows.slices[5 + i * 10]"
                 />
               </p>
-            </td>
 
-            <td class="tire" :class="{ back: !filter }">
-              <h4>
+              <div class="visualizer front" rowspan="2">
+                <WheelVisualizer
+                  :sets="[
+                    {
+                      wheel: dat[i].wheel.front,
+                      tire: dat[i].tire.front,
+                      color: () => getCssVar('fg0')
+                    }
+                  ]"
+                  :sets-are-reactive="false"
+                  :height="150"
+                  :width="60"
+                  :watch="false"
+                  position="top-left"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div v-if="isStaggered">
+            <p class="front-or-rear" v-if="isStaggered">Rear</p>
+            <div class="wheel-tire-container">
+              <p class="wheel-name">
+                <FuzzyResults
+                  :query="filter"
+                  :sliced-results="rows.slices[6 + i * 10]"
+                />
+              </p>
+              <p class="wheel-size">
+                <FuzzyResults
+                  :query="filter"
+                  :sliced-results="rows.slices[7 + i * 10]"
+                />
+              </p>
+
+              <p class="tire-name">
                 <FuzzyResults
                   :query="filter"
                   :sliced-results="rows.slices[8 + i * 10]"
                 />
-              </h4>
-              <p>
+              </p>
+              <span class="tire-size">
                 <FuzzyResults
                   :query="filter"
                   :sliced-results="rows.slices[9 + i * 10]"
                 />
-              </p>
-            </td>
-          </tr>
-        </template>
-      </tbody>
-    </table>
+              </span>
+
+              <div class="visualizer back" rowspan="2" v-show="isStaggered">
+                <WheelVisualizer
+                  :sets="[
+                    {
+                      wheel: dat[i].wheel.front,
+                      tire: dat[i].tire.front,
+                      color: () => getCssVar('fg0')
+                    }
+                  ]"
+                  :sets-are-reactive="false"
+                  :height="150"
+                  :width="60"
+                  :watch="false"
+                  position="top-left"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </template>
+    </div>
 
     <p v-else class="no-results">No results.</p>
   </div>
 </template>
 
 <style lang="scss">
+.search-bar-container {
+  max-width: 400pt;
+  margin: 3rem auto;
+  .num-results {
+    font-size: 0.8rem;
+    opacity: 0.5;
+    margin-top: 0.2em;
+  }
+}
+
 ._list {
   position: relative;
   width: 100%;
-
   .no-results {
     font-style: italic;
     text-align: center;
     opacity: 0.666;
   }
-
-  table {
-    max-width: calc($pad * 2 + 100%);
-    overflow-x: auto;
-    display: block;
-    border-spacing: 0;
-    margin: $pad -1 * $pad 0 -1 * $pad;
+  p,
+  h3,
+  h4 {
+    margin: 0;
   }
-  td {
-    padding: 0;
-  }
-
-  thead {
-    th {
-      background: $bg1;
-      padding: 1rem;
+  .row {
+    display: grid;
+    padding: 2rem 0;
+    max-width: 700pt;
+    margin: 0 auto;
+    grid-template-rows: auto auto;
+    grid-template-columns: 1fr 1fr;
+    gap: 0 3rem;
+    > h3 {
+      grid-column: 1 / 3;
     }
-  }
-
-  // fake "border spacing"
-  td,
-  th {
-    box-sizing: border-box;
-    &:nth-child(1) {
-      padding-left: 1rem;
-    }
-    &:nth-child(1),
-    &:nth-child(2n + 1) {
-      padding-right: 2rem;
-    }
-  }
-
-  tbody {
-    td {
-      width: 16rem;
-      max-width: 16rem;
-    }
-    th {
-      width: 20rem;
-      max-width: 20rem;
-      text-align: left;
-    }
-
-    h3,
-    p,
-    h4 {
-      line-height: 1em;
-      white-space: nowrap;
-      text-overflow: ellipsis;
-      overflow: hidden;
-      margin: 0;
-    }
-    h4 {
-      font-size: 0.8rem;
-      text-transform: uppercase;
-      padding: 0.5rem 1rem 0.25rem 0;
-    }
-    p {
-      font-size: 1.25rem;
-      padding: 0 1rem 0.5rem 0;
-    }
-
-    tr:not(.staggered) {
-      td.back {
-        opacity: 0.2;
+    .wheel-tire-container {
+      position: relative;
+      min-height: 150px;
+      .wheel-name {
+        text-transform: uppercase;
+        font-size: 0.8rem;
+        margin-top: 1rem;
+      }
+      .wheel-size {
+        font-size: 1.4rem;
+      }
+      .tire-name {
+        text-transform: uppercase;
+        font-size: 0.8rem;
+        margin-top: 1rem;
+      }
+      .tire-size {
+        font-size: 1.4rem;
+      }
+      .visualizer {
+        position: absolute;
+        right: 0;
+        top: 0;
       }
     }
-
-    tr:nth-child(1n) {
-      td,
-      th {
-        vertical-align: bottom;
-      }
-    }
-    tr:nth-child(2n) {
-      td,
-      th {
-        vertical-align: top;
-      }
-    }
-  }
-
-  .no-match {
-    opacity: 0.2;
-  }
-}
-
-._inputs {
-  th {
-    font-size: 0.75rem;
-    color: $fg0;
-    text-transform: uppercase;
-    text-align: left;
-    font-weight: normal;
-  }
-
-  td {
-    max-width: 20rem;
   }
 }
 </style>

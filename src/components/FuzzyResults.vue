@@ -9,14 +9,14 @@ defineProps<{
   <span v-if="!slicedResults"> unknown </span>
 
   <template v-else v-for="m in slicedResults">
-    <span :class="{ 'no-match': query ? !m.matched : undefined }">
+    <span :class="{ match: query ? m.matched : undefined }">
       {{ m.text }}
     </span>
   </template>
 </template>
 
 <style scoped lang="scss">
-.no-match {
-  opacity: 0.8;
+.match {
+	background: yellow;
 }
 </style>

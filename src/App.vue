@@ -2,7 +2,6 @@
 import { reactive, ref, UnwrapNestedRefs } from 'vue'
 import ExamplesList from './components/ExamplesList.vue'
 import OffsetGraph from './components/OffsetGraph.vue'
-import SpeedoErrorGraph from './components/SpeedoErrorGraph.vue'
 import VehicleSelector from './components/VehicleSelector.vue'
 import WheelControls from './components/WheelControls.vue'
 import WheelVisualizer from './components/WheelVisualizer.vue'
@@ -37,35 +36,70 @@ const vehicle = ref('')
 const rideheight = ref(0)
 
 // focused values
-const width = ref(9)
-const offset = ref(0)
+const width = ref(sets[0].wheel.width)
+const offset = ref(sets[0].wheel.offset)
 </script>
 
 <template>
   <main>
-    <section class="_wheel" v-for="set in sets">
-      <WheelControls
-        class="wheel-controls"
-        :wheel="set.wheel"
-        :tire="set.tire"
-        :vehicle="vehicle"
-        v-model:locked="set.locked"
-      />
+    <section>
+      <div class="constrain">
+        <h1>Car Wheel and Tire Size Visualizer</h1>
+        <p>
+          Select a vehicle from the dropdown to use as a reference, or just use
+          the green and blue tires below. You can see the difference between
+          them in the "Comparison" section below.
+        </p>
+        <p>
+          The graph will compare your wheel size with (if you've selected a
+          vehicle) sizes that other people put on their car.
+        </p>
+        <p>
+          You can click on a point on the graph to see the details of those
+          cars, including what tires and suspension system they have. Click
+          "Lock" button under the wheel settings to prevent a wheel from being
+          modified when you click the graph.
+        </p>
+        <p>
+          The source code for this project is avalable at
+          <a href="https://github.com/cjcarrick/wheel-size">
+            github.com/cjcarrick/wheel-size</a
+          >.
+        </p>
+        <Suspense>
+          <VehicleSelector
+            v-model:vehicle="vehicle"
+            v-model:rideheight="rideheight"
+          />
+        </Suspense>
+      </div>
+    </section>
 
-      <WheelVisualizer
-        :sets="[set]"
-        :sets-are-reactive="true"
-        :rideheight="0"
-        :lines="[
-          { label: 'Mounting Point', color: () => getCssVar('fg0'), x: 0 }
-        ]"
-        :scale="0.1"
-      />
+    <section class="_wheel">
+      <div v-for="set in sets">
+        <WheelControls
+          class="wheel-controls"
+          :wheel="set.wheel"
+          :tire="set.tire"
+          :vehicle="vehicle"
+          v-model:locked="set.locked"
+        />
+
+        <WheelVisualizer
+          :sets="[set]"
+          :sets-are-reactive="true"
+          :rideheight="0"
+          :lines="[
+            { label: 'Mounting Point', color: () => getCssVar('fg0'), x: 0 }
+          ]"
+          :scale="0.1"
+        />
+      </div>
     </section>
 
     <section class="_wheels">
-      <h2>Summary</h2>
-      <div class="row">
+      <div>
+        <h2>Comparison</h2>
         <WheelVisualizer
           :sets="sets"
           :sets-are-reactive="true"
@@ -75,56 +109,35 @@ const offset = ref(0)
           ]"
           :scale="0.1"
         />
-
-        <div class="speedo col">
-          <h3>Speedo Error</h3>
-          <SpeedoErrorGraph :sets="sets" />
-          <p>
-            A change in the outer diameter my result in the speedometer reading
-            incorrectly. Assuming that the green line represents the readings
-            from OEM tires, the blue represents new speedometer readings.
-          </p>
-        </div>
       </div>
-    </section>
-
-    <section class="graph">
-      <Suspense>
-        <OffsetGraph
-          :sets="sets"
-          :lines="[]"
-          :vehicle="vehicle"
-          :rideheight="rideheight"
-          v-model:offset="offset"
-          v-model:width="width"
-        />
-      </Suspense>
-    </section>
-
-    <section class="list">
-      <div class="constrain">
+      <div class="_graph">
         <Suspense>
-          <VehicleSelector
-            v-model:vehicle="vehicle"
-            v-model:rideheight="rideheight"
+          <OffsetGraph
+            :sets="sets"
+            :lines="[]"
+            :vehicle="vehicle"
+            :rideheight="rideheight"
+            v-model:offset="offset"
+            v-model:width="width"
           />
         </Suspense>
       </div>
+    </section>
 
-      <template v-if="vehicles[vehicle]">
-        <h1>Gallery</h1>
-
-        <Suspense>
-          <ExamplesList :vehicle="vehicle" :width="width" :offset="offset" />
-        </Suspense>
-      </template>
+    <section class="list" v-if="vehicles[vehicle]">
+      <Suspense>
+        <ExamplesList
+          :key="vehicle"
+          :vehicle="vehicle"
+          :width="width"
+          :offset="offset"
+        />
+      </Suspense>
     </section>
   </main>
 
   <footer>
-    <div class="constrain">
-      <p><a href="https://github.com/cjcarrick/wheel-size">Source</a></p>
-    </div>
+    <div class="constrain"></div>
   </footer>
 </template>
 
@@ -152,7 +165,7 @@ main {
     position: relative;
     border-radius: $br;
     padding: $pad;
-    border: 1px solid $bg2;
+    background: $bg1;
     box-sizing: border-box;
 
     // display: flex;
@@ -181,6 +194,11 @@ section {
   flex-wrap: wrap;
   align-items: center;
   justify-content: center;
+  > div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
 }
 
 .graph {
@@ -225,6 +243,21 @@ h2 {
   }
   p {
     max-width: 512px;
+  }
+}
+._wheels {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  ._graph {
+    flex: 1;
+  }
+  @media (max-width: 699px) {
+    align-items: center;
+    flex-direction: column;
+    ._graph {
+      align-self: stretch;
+    }
   }
 }
 </style>

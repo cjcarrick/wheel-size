@@ -26,7 +26,7 @@ const handleClick = () => {
 
 <style lang="scss">
 ._button {
-  background: $bg0;
+  background: $bg1;
   border-radius: $br;
   border: 1px solid $bg2;
   cursor: pointer;

@@ -3,23 +3,13 @@ $br: 0.2rem;
 $maxWidth: 892pt;
 $textWidth: 480pt;
 
-// light theme
-$bg0: #ffffff;
+$bg0: #eeeef2;
 $bg1: #fafafa;
-$bg2: #f0f0f0;
-$fg0: #999999;
-$fg1: #666666;
+$bg2: #e6e6e6;
+$fg0: #757575;
+$fg1: #4f4f4f;
 $col0: #5cadd6;
 $col1: #b1d65c;
-
-// // dark theme
-// $bg0: #171719;
-// $bg1: #202023;
-// $bg2: #313135;
-// $fg0: #ffffff;
-// $fg1: #a8a8aa;
-// $col0: #5cadd6;
-// $col1: #b1d65c;
 
 :root {
   --fg0: #{$fg0};
